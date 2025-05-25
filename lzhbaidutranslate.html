@@ -26,6 +26,9 @@
             <li>
                     <a class="function" href="#baidu_translate">baidu_translate</a>
             </li>
+            <li>
+                    <a class="function" href="#baidu_translate_async">baidu_translate_async</a>
+            </li>
     </ul>
 
 
@@ -47,9 +50,9 @@ lzhbaidutranslate    </h1>
 
                         <label class="view-source-button" for="mod-lzhbaidutranslate-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.trans</span><span class="w"> </span><span class="kn">import</span> <span class="n">baidu_translate</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.trans</span><span class="w"> </span><span class="kn">import</span> <span class="n">baidu_translate</span><span class="p">,</span> <span class="n">baidu_translate_async</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos">2</span></a>
-</span><span id="L-3"><a href="#L-3"><span class="linenos">3</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;baidu_translate&quot;</span><span class="p">]</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">3</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;baidu_translate&quot;</span><span class="p">,</span> <span class="s2">&quot;baidu_translate_async&quot;</span><span class="p">]</span>
 </span></pre></div>
 
 
@@ -65,52 +68,155 @@ lzhbaidutranslate    </h1>
 
     </div>
     <a class="headerlink" href="#baidu_translate"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="baidu_translate-6"><a href="#baidu_translate-6"><span class="linenos"> 6</span></a><span class="k">def</span><span class="w"> </span><span class="nf">baidu_translate</span><span class="p">(</span><span class="n">appid</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">appkey</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">|</span><span class="nb">str</span><span class="p">,</span> <span class="n">from_lang</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">to_lang</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;zh&quot;</span><span class="p">):</span>
-</span><span id="baidu_translate-7"><a href="#baidu_translate-7"><span class="linenos"> 7</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="baidu_translate-8"><a href="#baidu_translate-8"><span class="linenos"> 8</span></a><span class="sd">    #### 参数 :</span>
-</span><span id="baidu_translate-9"><a href="#baidu_translate-9"><span class="linenos"> 9</span></a><span class="sd">    - `appid` : APP ID</span>
-</span><span id="baidu_translate-10"><a href="#baidu_translate-10"><span class="linenos">10</span></a><span class="sd">    - `appkey` : 密钥</span>
-</span><span id="baidu_translate-11"><a href="#baidu_translate-11"><span class="linenos">11</span></a><span class="sd">    - `query` : 要翻译的字符串或字符串列表</span>
-</span><span id="baidu_translate-12"><a href="#baidu_translate-12"><span class="linenos">12</span></a><span class="sd">    - `from_lang` : 源语言</span>
-</span><span id="baidu_translate-13"><a href="#baidu_translate-13"><span class="linenos">13</span></a><span class="sd">    - `to_lang` : 目标语言</span>
-</span><span id="baidu_translate-14"><a href="#baidu_translate-14"><span class="linenos">14</span></a><span class="sd">    </span>
-</span><span id="baidu_translate-15"><a href="#baidu_translate-15"><span class="linenos">15</span></a><span class="sd">    #### return :</span>
-</span><span id="baidu_translate-16"><a href="#baidu_translate-16"><span class="linenos">16</span></a><span class="sd">    - 翻译结果，字符串或字符串列表，结构与`query`对应</span>
-</span><span id="baidu_translate-17"><a href="#baidu_translate-17"><span class="linenos">17</span></a><span class="sd">    - 如果请求不成功，则返回`None`</span>
-</span><span id="baidu_translate-18"><a href="#baidu_translate-18"><span class="linenos">18</span></a><span class="sd">    </span>
-</span><span id="baidu_translate-19"><a href="#baidu_translate-19"><span class="linenos">19</span></a><span class="sd">    #### [常见语种代码对照](https://api.fanyi.baidu.com/doc/21#:~:text=%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8%E8%AF%AF%E5%B7%AE%E3%80%82-,%E5%B8%B8%E8%A7%81%E8%AF%AD%E7%A7%8D%E5%88%97%E8%A1%A8,-%E5%90%8D%E7%A7%B0)</span>
-</span><span id="baidu_translate-20"><a href="#baidu_translate-20"><span class="linenos">20</span></a><span class="sd">    | 语种 | 自动 | 中 | 英 | 日 | 韩 |</span>
-</span><span id="baidu_translate-21"><a href="#baidu_translate-21"><span class="linenos">21</span></a><span class="sd">    | - | - | - | - | - | - |</span>
-</span><span id="baidu_translate-22"><a href="#baidu_translate-22"><span class="linenos">22</span></a><span class="sd">    | 代码 | `auto` | `zh` | `en` | `jp` | `kor` |</span>
-</span><span id="baidu_translate-23"><a href="#baidu_translate-23"><span class="linenos">23</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="baidu_translate-24"><a href="#baidu_translate-24"><span class="linenos">24</span></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="baidu_translate-25"><a href="#baidu_translate-25"><span class="linenos">25</span></a>        <span class="n">q</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-</span><span id="baidu_translate-26"><a href="#baidu_translate-26"><span class="linenos">26</span></a>    <span class="k">else</span><span class="p">:</span>
-</span><span id="baidu_translate-27"><a href="#baidu_translate-27"><span class="linenos">27</span></a>        <span class="n">q</span> <span class="o">=</span> <span class="n">query</span>
-</span><span id="baidu_translate-28"><a href="#baidu_translate-28"><span class="linenos">28</span></a>
-</span><span id="baidu_translate-29"><a href="#baidu_translate-29"><span class="linenos">29</span></a>    <span class="c1"># Generate salt and sign</span>
-</span><span id="baidu_translate-30"><a href="#baidu_translate-30"><span class="linenos">30</span></a>    <span class="n">salt</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">32768</span><span class="p">,</span> <span class="mi">65536</span><span class="p">)</span>
-</span><span id="baidu_translate-31"><a href="#baidu_translate-31"><span class="linenos">31</span></a>    <span class="n">sign</span> <span class="o">=</span> <span class="n">md5</span><span class="p">((</span><span class="n">appid</span> <span class="o">+</span> <span class="n">q</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span> <span class="o">+</span> <span class="n">appkey</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-</span><span id="baidu_translate-32"><a href="#baidu_translate-32"><span class="linenos">32</span></a>    <span class="c1"># Build request</span>
-</span><span id="baidu_translate-33"><a href="#baidu_translate-33"><span class="linenos">33</span></a>    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">}</span>
-</span><span id="baidu_translate-34"><a href="#baidu_translate-34"><span class="linenos">34</span></a>    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;appid&#39;</span><span class="p">:</span> <span class="n">appid</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">,</span> <span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="n">from_lang</span><span class="p">,</span> <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="n">to_lang</span><span class="p">,</span> <span class="s1">&#39;salt&#39;</span><span class="p">:</span> <span class="n">salt</span><span class="p">,</span> <span class="s1">&#39;sign&#39;</span><span class="p">:</span> <span class="n">sign</span><span class="p">}</span>
-</span><span id="baidu_translate-35"><a href="#baidu_translate-35"><span class="linenos">35</span></a>    <span class="c1"># Send request</span>
-</span><span id="baidu_translate-36"><a href="#baidu_translate-36"><span class="linenos">36</span></a>    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://api.fanyi.baidu.com/api/trans/vip/translate&#39;</span>
-</span><span id="baidu_translate-37"><a href="#baidu_translate-37"><span class="linenos">37</span></a>    <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-</span><span id="baidu_translate-38"><a href="#baidu_translate-38"><span class="linenos">38</span></a>
-</span><span id="baidu_translate-39"><a href="#baidu_translate-39"><span class="linenos">39</span></a>    <span class="n">ret</span><span class="o">=</span><span class="p">{}</span>  
-</span><span id="baidu_translate-40"><a href="#baidu_translate-40"><span class="linenos">40</span></a>    <span class="k">if</span> <span class="s2">&quot;error_code&quot;</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-</span><span id="baidu_translate-41"><a href="#baidu_translate-41"><span class="linenos">41</span></a>        <span class="k">return</span> <span class="kc">None</span>
-</span><span id="baidu_translate-42"><a href="#baidu_translate-42"><span class="linenos">42</span></a>    <span class="k">else</span><span class="p">:</span> 
-</span><span id="baidu_translate-43"><a href="#baidu_translate-43"><span class="linenos">43</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="baidu_translate-44"><a href="#baidu_translate-44"><span class="linenos">44</span></a>            <span class="n">ret</span> <span class="o">=</span> <span class="p">[</span><span class="n">tr</span><span class="p">[</span><span class="s2">&quot;dst&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;trans_result&quot;</span><span class="p">]]</span>
-</span><span id="baidu_translate-45"><a href="#baidu_translate-45"><span class="linenos">45</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="baidu_translate-46"><a href="#baidu_translate-46"><span class="linenos">46</span></a>            <span class="n">ret</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;trans_result&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;dst&quot;</span><span class="p">]</span>
-</span><span id="baidu_translate-47"><a href="#baidu_translate-47"><span class="linenos">47</span></a>    <span class="k">return</span> <span class="n">ret</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="baidu_translate-8"><a href="#baidu_translate-8"><span class="linenos"> 8</span></a><span class="k">def</span><span class="w"> </span><span class="nf">baidu_translate</span><span class="p">(</span><span class="n">appid</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">appkey</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">|</span><span class="nb">str</span><span class="p">,</span> <span class="n">from_lang</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">to_lang</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;zh&quot;</span><span class="p">):</span>
+</span><span id="baidu_translate-9"><a href="#baidu_translate-9"><span class="linenos"> 9</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="baidu_translate-10"><a href="#baidu_translate-10"><span class="linenos">10</span></a><span class="sd">    #### 参数 :</span>
+</span><span id="baidu_translate-11"><a href="#baidu_translate-11"><span class="linenos">11</span></a><span class="sd">    - `appid` : APP ID</span>
+</span><span id="baidu_translate-12"><a href="#baidu_translate-12"><span class="linenos">12</span></a><span class="sd">    - `appkey` : 密钥</span>
+</span><span id="baidu_translate-13"><a href="#baidu_translate-13"><span class="linenos">13</span></a><span class="sd">    - `query` : 要翻译的字符串或字符串列表</span>
+</span><span id="baidu_translate-14"><a href="#baidu_translate-14"><span class="linenos">14</span></a><span class="sd">    - `from_lang` : 源语言</span>
+</span><span id="baidu_translate-15"><a href="#baidu_translate-15"><span class="linenos">15</span></a><span class="sd">    - `to_lang` : 目标语言</span>
+</span><span id="baidu_translate-16"><a href="#baidu_translate-16"><span class="linenos">16</span></a><span class="sd">    </span>
+</span><span id="baidu_translate-17"><a href="#baidu_translate-17"><span class="linenos">17</span></a><span class="sd">    #### return :</span>
+</span><span id="baidu_translate-18"><a href="#baidu_translate-18"><span class="linenos">18</span></a><span class="sd">    - 翻译结果，字符串或字符串列表，结构与`query`对应</span>
+</span><span id="baidu_translate-19"><a href="#baidu_translate-19"><span class="linenos">19</span></a><span class="sd">    - 如果请求不成功，则返回`None`</span>
+</span><span id="baidu_translate-20"><a href="#baidu_translate-20"><span class="linenos">20</span></a><span class="sd">    </span>
+</span><span id="baidu_translate-21"><a href="#baidu_translate-21"><span class="linenos">21</span></a><span class="sd">    #### [常见语种代码对照](https://api.fanyi.baidu.com/doc/21#:~:text=%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8%E8%AF%AF%E5%B7%AE%E3%80%82-,%E5%B8%B8%E8%A7%81%E8%AF%AD%E7%A7%8D%E5%88%97%E8%A1%A8,-%E5%90%8D%E7%A7%B0)</span>
+</span><span id="baidu_translate-22"><a href="#baidu_translate-22"><span class="linenos">22</span></a><span class="sd">    | 语种 | 自动 | 中 | 英 | 日 | 韩 |</span>
+</span><span id="baidu_translate-23"><a href="#baidu_translate-23"><span class="linenos">23</span></a><span class="sd">    | - | - | - | - | - | - |</span>
+</span><span id="baidu_translate-24"><a href="#baidu_translate-24"><span class="linenos">24</span></a><span class="sd">    | 代码 | `auto` | `zh` | `en` | `jp` | `kor` |</span>
+</span><span id="baidu_translate-25"><a href="#baidu_translate-25"><span class="linenos">25</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="baidu_translate-26"><a href="#baidu_translate-26"><span class="linenos">26</span></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="baidu_translate-27"><a href="#baidu_translate-27"><span class="linenos">27</span></a>        <span class="n">q</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</span><span id="baidu_translate-28"><a href="#baidu_translate-28"><span class="linenos">28</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="baidu_translate-29"><a href="#baidu_translate-29"><span class="linenos">29</span></a>        <span class="n">q</span> <span class="o">=</span> <span class="n">query</span>
+</span><span id="baidu_translate-30"><a href="#baidu_translate-30"><span class="linenos">30</span></a>
+</span><span id="baidu_translate-31"><a href="#baidu_translate-31"><span class="linenos">31</span></a>    <span class="c1"># Generate salt and sign</span>
+</span><span id="baidu_translate-32"><a href="#baidu_translate-32"><span class="linenos">32</span></a>    <span class="n">salt</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">32768</span><span class="p">,</span> <span class="mi">65536</span><span class="p">)</span>
+</span><span id="baidu_translate-33"><a href="#baidu_translate-33"><span class="linenos">33</span></a>    <span class="n">sign</span> <span class="o">=</span> <span class="n">md5</span><span class="p">((</span><span class="n">appid</span> <span class="o">+</span> <span class="n">q</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span> <span class="o">+</span> <span class="n">appkey</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</span><span id="baidu_translate-34"><a href="#baidu_translate-34"><span class="linenos">34</span></a>    <span class="c1"># Build request</span>
+</span><span id="baidu_translate-35"><a href="#baidu_translate-35"><span class="linenos">35</span></a>    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">}</span>
+</span><span id="baidu_translate-36"><a href="#baidu_translate-36"><span class="linenos">36</span></a>    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;appid&#39;</span><span class="p">:</span> <span class="n">appid</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">,</span> <span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="n">from_lang</span><span class="p">,</span> <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="n">to_lang</span><span class="p">,</span> <span class="s1">&#39;salt&#39;</span><span class="p">:</span> <span class="n">salt</span><span class="p">,</span> <span class="s1">&#39;sign&#39;</span><span class="p">:</span> <span class="n">sign</span><span class="p">}</span>
+</span><span id="baidu_translate-37"><a href="#baidu_translate-37"><span class="linenos">37</span></a>    <span class="c1"># Send request</span>
+</span><span id="baidu_translate-38"><a href="#baidu_translate-38"><span class="linenos">38</span></a>    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://api.fanyi.baidu.com/api/trans/vip/translate&#39;</span>
+</span><span id="baidu_translate-39"><a href="#baidu_translate-39"><span class="linenos">39</span></a>    <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span><span id="baidu_translate-40"><a href="#baidu_translate-40"><span class="linenos">40</span></a>
+</span><span id="baidu_translate-41"><a href="#baidu_translate-41"><span class="linenos">41</span></a>    <span class="n">ret</span><span class="o">=</span><span class="p">{}</span>  
+</span><span id="baidu_translate-42"><a href="#baidu_translate-42"><span class="linenos">42</span></a>    <span class="k">if</span> <span class="s2">&quot;error_code&quot;</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+</span><span id="baidu_translate-43"><a href="#baidu_translate-43"><span class="linenos">43</span></a>        <span class="k">return</span> <span class="kc">None</span>
+</span><span id="baidu_translate-44"><a href="#baidu_translate-44"><span class="linenos">44</span></a>    <span class="k">else</span><span class="p">:</span> 
+</span><span id="baidu_translate-45"><a href="#baidu_translate-45"><span class="linenos">45</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="baidu_translate-46"><a href="#baidu_translate-46"><span class="linenos">46</span></a>            <span class="n">ret</span> <span class="o">=</span> <span class="p">[</span><span class="n">tr</span><span class="p">[</span><span class="s2">&quot;dst&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;trans_result&quot;</span><span class="p">]]</span>
+</span><span id="baidu_translate-47"><a href="#baidu_translate-47"><span class="linenos">47</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="baidu_translate-48"><a href="#baidu_translate-48"><span class="linenos">48</span></a>            <span class="n">ret</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;trans_result&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;dst&quot;</span><span class="p">]</span>
+</span><span id="baidu_translate-49"><a href="#baidu_translate-49"><span class="linenos">49</span></a>    <span class="k">return</span> <span class="n">ret</span>
 </span></pre></div>
 
 
             <div class="docstring"><h4 id="参数">参数 :</h4>
+
+<ul>
+<li><code>appid</code> : APP ID</li>
+<li><code>appkey</code> : 密钥</li>
+<li><code>query</code> : 要翻译的字符串或字符串列表</li>
+<li><code>from_lang</code> : 源语言</li>
+<li><code>to_lang</code> : 目标语言</li>
+</ul>
+
+<h4 id="return">return :</h4>
+
+<ul>
+<li>翻译结果，字符串或字符串列表，结构与<code>query</code>对应</li>
+<li>如果请求不成功，则返回<code>None</code></li>
+</ul>
+
+<h4 id="常见语种代码对照httpsapifanyibaiducomdoc21texte58fafe883bde5ad98e59ca8e8afafe5b7aee38082-e5b8b8e8a781e8afade7a78de58897e8a1a8-e5908de7a7b0"><a href="https://api.fanyi.baidu.com/doc/21#:~:text=%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8%E8%AF%AF%E5%B7%AE%E3%80%82-,%E5%B8%B8%E8%A7%81%E8%AF%AD%E7%A7%8D%E5%88%97%E8%A1%A8,-%E5%90%8D%E7%A7%B0">常见语种代码对照</a></h4>
+
+<table>
+<thead>
+<tr>
+  <th>语种</th>
+  <th>自动</th>
+  <th>中</th>
+  <th>英</th>
+  <th>日</th>
+  <th>韩</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>代码</td>
+  <td><code>auto</code></td>
+  <td><code>zh</code></td>
+  <td><code>en</code></td>
+  <td><code>jp</code></td>
+  <td><code>kor</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+                </section>
+                <section id="baidu_translate_async">
+                            <input id="baidu_translate_async-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">async def</span>
+        <span class="name">baidu_translate_async</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">appid</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">appkey</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">query</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">from_lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span>,</span><span class="param">	<span class="n">to_lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;zh&#39;</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="baidu_translate_async-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#baidu_translate_async"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="baidu_translate_async-51"><a href="#baidu_translate_async-51"><span class="linenos">51</span></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">baidu_translate_async</span><span class="p">(</span><span class="n">appid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">appkey</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">from_lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">to_lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;zh&quot;</span><span class="p">):</span>
+</span><span id="baidu_translate_async-52"><a href="#baidu_translate_async-52"><span class="linenos">52</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="baidu_translate_async-53"><a href="#baidu_translate_async-53"><span class="linenos">53</span></a><span class="sd">    `baidu_translate()`的异步版</span>
+</span><span id="baidu_translate_async-54"><a href="#baidu_translate_async-54"><span class="linenos">54</span></a><span class="sd">    #### 参数 :</span>
+</span><span id="baidu_translate_async-55"><a href="#baidu_translate_async-55"><span class="linenos">55</span></a><span class="sd">    - `appid` : APP ID</span>
+</span><span id="baidu_translate_async-56"><a href="#baidu_translate_async-56"><span class="linenos">56</span></a><span class="sd">    - `appkey` : 密钥</span>
+</span><span id="baidu_translate_async-57"><a href="#baidu_translate_async-57"><span class="linenos">57</span></a><span class="sd">    - `query` : 要翻译的字符串或字符串列表</span>
+</span><span id="baidu_translate_async-58"><a href="#baidu_translate_async-58"><span class="linenos">58</span></a><span class="sd">    - `from_lang` : 源语言</span>
+</span><span id="baidu_translate_async-59"><a href="#baidu_translate_async-59"><span class="linenos">59</span></a><span class="sd">    - `to_lang` : 目标语言</span>
+</span><span id="baidu_translate_async-60"><a href="#baidu_translate_async-60"><span class="linenos">60</span></a><span class="sd">    </span>
+</span><span id="baidu_translate_async-61"><a href="#baidu_translate_async-61"><span class="linenos">61</span></a><span class="sd">    #### return :</span>
+</span><span id="baidu_translate_async-62"><a href="#baidu_translate_async-62"><span class="linenos">62</span></a><span class="sd">    - 翻译结果，字符串或字符串列表，结构与`query`对应</span>
+</span><span id="baidu_translate_async-63"><a href="#baidu_translate_async-63"><span class="linenos">63</span></a><span class="sd">    - 如果请求不成功，则返回`None`</span>
+</span><span id="baidu_translate_async-64"><a href="#baidu_translate_async-64"><span class="linenos">64</span></a><span class="sd">    </span>
+</span><span id="baidu_translate_async-65"><a href="#baidu_translate_async-65"><span class="linenos">65</span></a><span class="sd">    #### [常见语种代码对照](https://api.fanyi.baidu.com/doc/21#:~:text=%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8%E8%AF%AF%E5%B7%AE%E3%80%82-,%E5%B8%B8%E8%A7%81%E8%AF%AD%E7%A7%8D%E5%88%97%E8%A1%A8,-%E5%90%8D%E7%A7%B0)</span>
+</span><span id="baidu_translate_async-66"><a href="#baidu_translate_async-66"><span class="linenos">66</span></a><span class="sd">    | 语种 | 自动 | 中 | 英 | 日 | 韩 |</span>
+</span><span id="baidu_translate_async-67"><a href="#baidu_translate_async-67"><span class="linenos">67</span></a><span class="sd">    | - | - | - | - | - | - |</span>
+</span><span id="baidu_translate_async-68"><a href="#baidu_translate_async-68"><span class="linenos">68</span></a><span class="sd">    | 代码 | `auto` | `zh` | `en` | `jp` | `kor` |</span>
+</span><span id="baidu_translate_async-69"><a href="#baidu_translate_async-69"><span class="linenos">69</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="baidu_translate_async-70"><a href="#baidu_translate_async-70"><span class="linenos">70</span></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="baidu_translate_async-71"><a href="#baidu_translate_async-71"><span class="linenos">71</span></a>        <span class="n">q</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</span><span id="baidu_translate_async-72"><a href="#baidu_translate_async-72"><span class="linenos">72</span></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="baidu_translate_async-73"><a href="#baidu_translate_async-73"><span class="linenos">73</span></a>        <span class="n">q</span> <span class="o">=</span> <span class="n">query</span>
+</span><span id="baidu_translate_async-74"><a href="#baidu_translate_async-74"><span class="linenos">74</span></a>
+</span><span id="baidu_translate_async-75"><a href="#baidu_translate_async-75"><span class="linenos">75</span></a>    <span class="n">salt</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">32768</span><span class="p">,</span> <span class="mi">65536</span><span class="p">)</span>
+</span><span id="baidu_translate_async-76"><a href="#baidu_translate_async-76"><span class="linenos">76</span></a>    <span class="n">sign</span> <span class="o">=</span> <span class="n">md5</span><span class="p">((</span><span class="n">appid</span> <span class="o">+</span> <span class="n">q</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span> <span class="o">+</span> <span class="n">appkey</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+</span><span id="baidu_translate_async-77"><a href="#baidu_translate_async-77"><span class="linenos">77</span></a>
+</span><span id="baidu_translate_async-78"><a href="#baidu_translate_async-78"><span class="linenos">78</span></a>    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://api.fanyi.baidu.com/api/trans/vip/translate&#39;</span>
+</span><span id="baidu_translate_async-79"><a href="#baidu_translate_async-79"><span class="linenos">79</span></a>    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">}</span>
+</span><span id="baidu_translate_async-80"><a href="#baidu_translate_async-80"><span class="linenos">80</span></a>    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;appid&#39;</span><span class="p">:</span> <span class="n">appid</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">,</span> <span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="n">from_lang</span><span class="p">,</span> <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="n">to_lang</span><span class="p">,</span> <span class="s1">&#39;salt&#39;</span><span class="p">:</span> <span class="n">salt</span><span class="p">,</span> <span class="s1">&#39;sign&#39;</span><span class="p">:</span> <span class="n">sign</span><span class="p">}</span>
+</span><span id="baidu_translate_async-81"><a href="#baidu_translate_async-81"><span class="linenos">81</span></a>
+</span><span id="baidu_translate_async-82"><a href="#baidu_translate_async-82"><span class="linenos">82</span></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+</span><span id="baidu_translate_async-83"><a href="#baidu_translate_async-83"><span class="linenos">83</span></a>        <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+</span><span id="baidu_translate_async-84"><a href="#baidu_translate_async-84"><span class="linenos">84</span></a>            <span class="n">res</span> <span class="o">=</span> <span class="k">await</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span><span id="baidu_translate_async-85"><a href="#baidu_translate_async-85"><span class="linenos">85</span></a>    
+</span><span id="baidu_translate_async-86"><a href="#baidu_translate_async-86"><span class="linenos">86</span></a>    <span class="k">if</span> <span class="s2">&quot;error_code&quot;</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+</span><span id="baidu_translate_async-87"><a href="#baidu_translate_async-87"><span class="linenos">87</span></a>        <span class="k">return</span> <span class="kc">None</span>
+</span><span id="baidu_translate_async-88"><a href="#baidu_translate_async-88"><span class="linenos">88</span></a>    <span class="k">else</span><span class="p">:</span> 
+</span><span id="baidu_translate_async-89"><a href="#baidu_translate_async-89"><span class="linenos">89</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="baidu_translate_async-90"><a href="#baidu_translate_async-90"><span class="linenos">90</span></a>            <span class="k">return</span> <span class="p">[</span><span class="n">tr</span><span class="p">[</span><span class="s2">&quot;dst&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;trans_result&quot;</span><span class="p">]]</span>
+</span><span id="baidu_translate_async-91"><a href="#baidu_translate_async-91"><span class="linenos">91</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="baidu_translate_async-92"><a href="#baidu_translate_async-92"><span class="linenos">92</span></a>            <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;trans_result&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;dst&quot;</span><span class="p">]</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p><code><a href="#baidu_translate">baidu_translate()</a></code>的异步版</p>
+
+<h4 id="参数">参数 :</h4>
 
 <ul>
 <li><code>appid</code> : APP ID</li>
